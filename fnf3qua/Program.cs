@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CommandLine;
+using YamlDotNet.Core;
 
-namespace qua3osu
+// Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "qua3osuGui", "qua3osuGui\qua3osuGui.csproj", "{A6856D25-2883-4C39-B18C-A10461955F2C}"
+// EndProject
+
+namespace fnf3qua
 {
     class Program
     {
         static void Main(string[] args)
         {
-            var arguments = Parser.Default.ParseArguments<Arguments>(args)
-                .WithParsed(arguments => ConvertListOfMapsets(arguments));
+            var arguments = CommandLine.Parser.Default.ParseArguments<Arguments>(args).WithParsed(argument => ConvertListOfMapsets(argument));
         }
 
         static void ConvertListOfMapsets(Arguments args)
@@ -27,10 +30,10 @@ namespace qua3osu
                 {
                     listOfQpFiles.AddRange(
                         Directory.GetFiles(inputPath)
-                            .Where(file => Path.GetExtension(file) == ".qp")
+                            .Where(file => Path.GetExtension(file) == ".json")
                     );
                 }
-                else if (File.Exists(inputPath) && Path.GetExtension(inputPath) == ".qp")
+                else if (File.Exists(inputPath) && Path.GetExtension(inputPath) == ".json")
                 {
                     listOfQpFiles.Add(inputPath);
                 }
@@ -44,15 +47,17 @@ namespace qua3osu
             foreach (var mapsetPath in listOfQpFiles)
             {
                 args.Print($"Converting {mapsetPath}", 2);
-                try
-                {
-                    Conversion.ConvertMapset(mapsetPath, args);
-                    Console.WriteLine($"Finished converting mapset {mapsetPath}", 2);
-                }
-                catch (Exception e)
-                {
-                    args.Print($"Could not convert mapset {mapsetPath}, {e.Message}");
-                }
+                // try
+                // {
+                //     Conversion.ConvertMapset(mapsetPath, args);
+                //     Console.WriteLine($"Finished converting mapset {mapsetPath}", 2);
+                // }
+                // catch (Exception e)
+                // {
+                //     args.Print($"Could not convert mapset {mapsetPath}, {e.Message}");
+                // }
+                Conversion.ConvertMapset(mapsetPath, args);
+                Console.WriteLine($"Finished converting mapset {Path.GetFileNameWithoutExtension(mapsetPath) + ".qua"}", 2);
             }
         }
     }
